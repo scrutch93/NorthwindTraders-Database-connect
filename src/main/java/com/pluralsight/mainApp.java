@@ -6,6 +6,7 @@ public class mainApp {
 
         public static void main(String[] args) {
 
+            //url, user, password go here
 
             try {
                 Connection connection = DriverManager.getConnection(url, user, password);
