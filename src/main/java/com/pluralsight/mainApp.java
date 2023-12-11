@@ -5,8 +5,9 @@ import java.sql.*;
 public class mainApp {
 
         public static void main(String[] args) {
-
-            //url, user, password go here
+//            String url = "jdbc:mysql://localhost:3306/northwind";
+//            String user = "";
+//            String password = "";
 
             try {
                 Connection connection = DriverManager.getConnection(url, user, password);
