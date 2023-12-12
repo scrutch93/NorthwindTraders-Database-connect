@@ -2,55 +2,77 @@ package com.pluralsight;
 
 import java.sql.*;
 import java.util.Scanner;
+import org.apache.commons.dbcp2.BasicDataSource;
+
+import javax.sql.DataSource;
 
 public class mainApp {
-    static String url = "jdbc:mysql://localhost:3306/northwind";
-    static  String user = "";
-    static String password = "";
+//    static String url = "jdbc:mysql://localhost:3306/northwind";
+//    static String user = "";
+//    static String password = "";
 
+
+    //These static variables are for checking for null possibilities in the try/catch/final approaches. These are not used in the try-with-resources. REMEMBER THIS!
     static ResultSet resultSet = null;
     static PreparedStatement preparedStatement = null;
     static Connection connection = null;
     static Scanner input = new Scanner(System.in);
 
 
+    public static void main(String[] args) throws SQLException {
 
-        public static void main(String[] args) throws SQLException {
-
-
-            System.out.println("What would you like to do?");
-            System.out.println(" 1) Display all products");
-            System.out.println(" 2) Display all customers");
-            System.out.println(" 3) Display all categories");
-            System.out.println(" 4) Exit");
-            System.out.println("Select an option: ");
-            int selection = input.nextInt();
-
-
-            switch (selection) {
-                case 1:
-                    getProducts();
-                    break;
-                case 2:
-                    getCustomers();
-                    break;
-                case 3:
-                    getAllCategories();
-                    getProductsFromCategory();
-                    break;
-                case 4:
-                    System.out.println("Later!");
-                    System.exit(0);
-            }
-
-
-
+        if (args.length != 2) {
+            System.out.println(
+                    "Application needs two arguments to run: " +
+                            "java com.hca.jdbc.UsingDriverManager <username> " +
+                            "<password>");
+            System.exit(1);
         }
-    public static void getProducts() throws SQLException {
+
+        String username = args[0];
+        String password = args[1];
+
+        BasicDataSource dataSource = new BasicDataSource ();
+
+        dataSource.setUrl("jdbc:mysql://localhost:3306/northwind");
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+
+        System.out.println("What would you like to do?");
+        System.out.println(" 1) Display all products");
+        System.out.println(" 2) Display all customers");
+        System.out.println(" 3) Display all categories");
+        System.out.println(" 4) Exit");
+        System.out.println("Select an option: ");
+        int selection = input.nextInt();
+
+
+        switch (selection) {
+            case 1:
+                getProducts(dataSource);
+                break;
+            case 2:
+                getCustomers(dataSource);
+                break;
+            case 3:
+                getAllCategories(dataSource);
+                getProductsFromCategory(dataSource);
+                break;
+            case 4:
+                System.out.println("Later!");
+                System.exit(0);
+        }
+
+
+    }
+
+    public static void getProducts(DataSource dataSource) throws SQLException {
+
 
         try {
             //This connects to MySQL with login info
-            connection = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
 
             //This sets up the query prompt for SQL
             preparedStatement = connection.prepareStatement(
@@ -81,10 +103,10 @@ public class mainApp {
         }
     }
 
-    public static void getCustomers() throws SQLException {
+    public static void getCustomers(DataSource dataSource) throws SQLException {
 
         try {
-            connection = DriverManager.getConnection(url, user, password);
+            connection = dataSource.getConnection();
             // Perform database operations here
 
             preparedStatement = connection.prepareStatement(
@@ -119,9 +141,9 @@ public class mainApp {
 
 
     //Below shows a try with resources approach
-    public static void getAllCategories() throws SQLException {
+    public static void getAllCategories(DataSource dataSource) throws SQLException {
         try (
-                Connection connection = DriverManager.getConnection(url, user, password);
+                Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
                         "SELECT CategoryID, CategoryName FROM categories ORDER BY CategoryID");
                 ResultSet resultSet = preparedStatement.executeQuery()
@@ -138,13 +160,13 @@ public class mainApp {
     }
 
 
-    public static void getProductsFromCategory() {
+    public static void getProductsFromCategory(DataSource dataSource) {
         System.out.println("Enter a category ID to display all respective products:");
         int selection = input.nextInt();
 
         //This try with resources approach first uses try to insert objects that could fail
         try (
-                Connection connection = DriverManager.getConnection(url, user, password);
+                Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
                         "SELECT * FROM products WHERE CategoryID = ?")
         ) {
