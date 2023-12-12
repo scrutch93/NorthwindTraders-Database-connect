@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class mainApp {
     static String url = "jdbc:mysql://localhost:3306/northwind";
-    static  String user = "root";
-    static String password = "Supersonic93!";
+    static  String user = "";
+    static String password = "";
 
         public static void main(String[] args) throws SQLException {
 
@@ -72,7 +72,6 @@ public class mainApp {
         }
     }
 
-
     public static void getCustomers() throws SQLException {
 
         ResultSet resultSet = null;
@@ -110,7 +109,6 @@ public class mainApp {
 
         }
     }
-
 
 
 
