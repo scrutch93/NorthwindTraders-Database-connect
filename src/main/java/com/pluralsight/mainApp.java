@@ -7,10 +7,12 @@ public class mainApp {
     static String url = "jdbc:mysql://localhost:3306/northwind";
     static  String user = "";
     static String password = "";
+
     static ResultSet resultSet = null;
     static PreparedStatement preparedStatement = null;
     static Connection connection = null;
     static Scanner input = new Scanner(System.in);
+
 
 
         public static void main(String[] args) throws SQLException {
@@ -79,7 +81,6 @@ public class mainApp {
         }
     }
 
-
     public static void getCustomers() throws SQLException {
 
         try {
@@ -116,6 +117,7 @@ public class mainApp {
         }
     }
 
+
     //Below shows a try with resources approach
     public static void getAllCategories() throws SQLException {
         try (
@@ -132,6 +134,7 @@ public class mainApp {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
 
